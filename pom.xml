@@ -11,4 +11,14 @@
         <maven.compiler.target>19</maven.compiler.target>
         <exec.mainClass>fr.insa.friker.encheres1512.Encheres1512</exec.mainClass>
     </properties>
+      
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.0</version>
+        </dependency>
+    </dependencies>
+
+
 </project>
