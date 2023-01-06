@@ -231,7 +231,7 @@ public static void deleteSchema(Connection con) throws SQLException {
     /*
     public static Optional<Utilisateur> login(Connection con, String email, String pass) throws SQLException {
         try ( PreparedStatement pst = con.prepareStatement(
-                "select utilisateurs.id as uid,nrole"
+                "select utilcreeschisateurs.id as uid,nrole"
                 + " from utilisateurs "
                 + "   join role on utilisateurs.role = roles.id"
                 + " where utilisateurs.email = ? and pass = ?")) {
@@ -240,7 +240,7 @@ public static void deleteSchema(Connection con) throws SQLException {
             pst.setString(2, pass);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
-                return Optional.of(new Utilisateur(res.getInt("uid"), email, pass, res.getString("nrole")));
+                return Optional.of(new Utilisateur(res.getInt("uid"), email, pass, res.getString("role")));
             } else {
                 return Optional.empty();
             }
@@ -248,6 +248,45 @@ public static void deleteSchema(Connection con) throws SQLException {
     }
     */
     
+    
+
+    
+    
+    
+    
+/*
+    public static void menu(Connection con) {
+        int rep = -1;
+        while (rep != 0) {
+            System.out.println("Menu");
+            System.out.println("=============");
+            System.out.println("1) créer une table");
+            System.out.println("2) supprimer une table");
+            System.out.println("3) liste des utilisateurs");
+            System.out.println("4) ajouter un utilisateur");
+            System.out.println("0) quitter");
+            rep = ConsoleFdB.entreeEntier("Votre choix : ");
+                    try {
+                if (rep == 1) {
+                    creeSchema(con);
+                } else if (rep == 2) {
+                    deleteSchema(con);
+                } else if (rep == 3) {
+                    afficheUtilisateurs(con);
+                } else if (rep == 4) {
+                    nom = = ConsoleFdB.entreeEntier("Le nom : ");
+                    createUtilisateur(con, );
+    
+
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new Error(ex);
+            }
+        }
+    }
+    
+    */
     
     
     public static void main(String[] args) {
@@ -263,6 +302,8 @@ public static void deleteSchema(Connection con) throws SQLException {
             createUtilisateur(con, "oui", "non", 0, "j'aimail", "67000000000");
         } catch (NomExisteDejaException ex) {}
             */
+           
+            //login(con, "maildeJ", "mdpp");
             //System.out.println("creation OK");
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
