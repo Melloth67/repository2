@@ -5,6 +5,7 @@
 
 package fr.insa.friker.encheres1512;
 
+import fr.insa.friker.utils.ConsoleFdB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -254,8 +255,8 @@ public static void deleteSchema(Connection con) throws SQLException {
     
     
     
-/*
-    public static void menu(Connection con) {
+
+    public static void menu(Connection con) throws NomExisteDejaException {
         int rep = -1;
         while (rep != 0) {
             System.out.println("Menu");
@@ -266,7 +267,7 @@ public static void deleteSchema(Connection con) throws SQLException {
             System.out.println("4) ajouter un utilisateur");
             System.out.println("0) quitter");
             rep = ConsoleFdB.entreeEntier("Votre choix : ");
-                    try {
+               try {
                 if (rep == 1) {
                     creeSchema(con);
                 } else if (rep == 2) {
@@ -274,19 +275,25 @@ public static void deleteSchema(Connection con) throws SQLException {
                 } else if (rep == 3) {
                     afficheUtilisateurs(con);
                 } else if (rep == 4) {
-                    nom = = ConsoleFdB.entreeEntier("Le nom : ");
-                    createUtilisateur(con, );
-    
+                    String nom = ConsoleFdB.entreeString("Le nom : ");
+                    String pass = ConsoleFdB.entreeString("Le mot de passe : ");
+                    int role = ConsoleFdB.entreeEntier("role : 1 = admin; 0 = non admin");
+                    String mail = ConsoleFdB.entreeString("L'email : ");
+                    String codepostal = ConsoleFdB.entreeString("Le code postal : ");
+                    
+                    createUtilisateur(con,"nom","pass",role,"mail","codepostal");
 
                     }
-                }
-            } catch (SQLException ex) {
-                throw new Error(ex);
-            }
+                } catch (SQLException ex) {
+            throw new Error(ex);
         }
+                }
+            
+        
+        
     }
     
-    */
+    
     
     
     public static void main(String[] args) {
@@ -302,9 +309,13 @@ public static void deleteSchema(Connection con) throws SQLException {
             createUtilisateur(con, "oui", "non", 0, "j'aimail", "67000000000");
         } catch (NomExisteDejaException ex) {}
             */
-           
-            //login(con, "maildeJ", "mdpp");
-            //System.out.println("creation OK");
+            try {
+                //login(con, "maildeJ", "mdpp");
+                //System.out.println("creation OK");
+                menu(con);
+            } catch (NomExisteDejaException ex) {
+                Logger.getLogger(Encheres1512.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
         } catch (SQLException ex) {
