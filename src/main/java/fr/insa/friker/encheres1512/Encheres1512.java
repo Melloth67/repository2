@@ -97,13 +97,13 @@ public class Encheres1512 {
         try ( Statement st = con.createStatement()) {
             // creation des tables
             
-            st.executeUpdate(
+            /*st.executeUpdate(
                     """
                     create table roles (
                         id integer not null primary key,
                         nrole varchar(30) not null unique
                     )
-                    """);
+                    """);*/
             st.executeUpdate(
                     """
                     
@@ -174,7 +174,7 @@ public static void deleteSchema(Connection con) throws SQLException {
                 try {
                 st.executeUpdate(
                         """
-                    drop table utilisateurs
+                    drop table TABLETESTNUMEROUNO
                     """);
                 System.out.println("table utilisateurs dropped");
             } catch (SQLException ex) {
@@ -228,6 +228,53 @@ public static void deleteSchema(Connection con) throws SQLException {
             con.setAutoCommit(true);
         }
     }
+    
+    /*
+    public static int createEnchere(Connection con, String nom, String pass, int roleID, String email, String codepostal)
+            throws SQLException, NomExisteDejaException {
+        // je me place dans une transaction pour m'assurer que la séquence
+        // test du nom - création est bien atomique et isolée
+        con.setAutoCommit(false);
+        try ( PreparedStatement chercheNom = con.prepareStatement(
+                "select id from utilisateurs where nom = ?")) {
+            chercheNom.setString(1, nom);
+            ResultSet testNom = chercheNom.executeQuery();
+            if (testNom.next()) {
+                throw new NomExisteDejaException();
+            }
+            // lors de la creation du PreparedStatement, il faut que je précise
+            // que je veux qu'il conserve les clés générées
+            try ( PreparedStatement pst = con.prepareStatement(
+                    """
+                insert into utilisateurs (nom,pass,role,email,codepostal) values (?,?,?,?,?)
+                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                pst.setString(1, nom);
+                pst.setString(2, pass);
+                pst.setInt(3, roleID);
+                pst.setString(4, email);
+                pst.setString(5, codepostal);
+                pst.executeUpdate();
+                con.commit();
+
+                // je peux alors récupérer les clés créées comme un result set :
+                try ( ResultSet rid = pst.getGeneratedKeys()) {
+                    // et comme ici je suis sur qu'il y a une et une seule clé, je
+                    // fait un simple next 
+                    rid.next();
+                    // puis je récupère la valeur de la clé créé qui est dans la
+                    // première colonne du ResultSet
+                    int id = rid.getInt(1);
+                    return id;
+                }
+            }
+        } catch (Exception ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+    */
 
     /*
     public static Optional<Utilisateur> login(Connection con, String email, String pass) throws SQLException {
@@ -270,10 +317,16 @@ public static void deleteSchema(Connection con) throws SQLException {
                try {
                 if (rep == 1) {
                     creeSchema(con);
+                    System.out.println("Done");
                 } else if (rep == 2) {
+                        int conf = 0;
+                    conf = ConsoleFdB.entreeEntier("Tapez 1 pour confirmer");
+                    if (conf == 1){
                     deleteSchema(con);
+                    System.out.println("Done");}
                 } else if (rep == 3) {
                     afficheUtilisateurs(con);
+                    System.out.println("voir plus haut");
                 } else if (rep == 4) {
                     String nom = ConsoleFdB.entreeString("Le nom : ");
                     String pass = ConsoleFdB.entreeString("Le mot de passe : ");
@@ -281,7 +334,7 @@ public static void deleteSchema(Connection con) throws SQLException {
                     String mail = ConsoleFdB.entreeString("L'email : ");
                     String codepostal = ConsoleFdB.entreeString("Le code postal : ");
                     
-                    createUtilisateur(con,"nom","pass",role,"mail","codepostal");
+                    createUtilisateur(con,nom,pass,role,mail,codepostal);
 
                     }
                 } catch (SQLException ex) {
@@ -296,7 +349,7 @@ public static void deleteSchema(Connection con) throws SQLException {
     
     
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NomExisteDejaException {
 
         try {
             Connection con = defautConnect();
@@ -306,16 +359,12 @@ public static void deleteSchema(Connection con) throws SQLException {
             //deleteSchema(con);
             /*
             try{
-            createUtilisateur(con, "oui", "non", 0, "j'aimail", "67000000000");
-        } catch (NomExisteDejaException ex) {}
-            */
-            try {
-                //login(con, "maildeJ", "mdpp");
-                //System.out.println("creation OK");
-                menu(con);
-            } catch (NomExisteDejaException ex) {
-                Logger.getLogger(Encheres1512.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            createUtilisateur(con, "AAAAAAAAAA", "non", 0, "j'aimail", "67000000000");
+            } catch (NomExisteDejaException ex) {}
+             */
+            //login(con, "maildeJ", "mdpp");
+            //System.out.println("creation OK");
+            menu(con);
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
         } catch (SQLException ex) {
