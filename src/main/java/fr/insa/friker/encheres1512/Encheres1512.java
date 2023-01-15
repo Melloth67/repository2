@@ -317,7 +317,7 @@ public static void deleteSchema(Connection con) throws SQLException {
     public static void liste_encheres_utilisateur(Connection con, int idu)throws SQLException{
         con.setAutoCommit(false);
             try ( Statement st = con.createStatement()) {
-                try ( ResultSet tle = st.executeQuery("select * from encheres where idclient = "+ idu)) {
+                try ( ResultSet tle = st.executeQuery("select * from encheres Join objets on objets.idobjet = encheres.idobjet where idclient = "+ idu)){
                     System.out.println("liste des enchères :");
                 System.out.println("------------------");
                 tle.next();
@@ -326,21 +326,19 @@ public static void deleteSchema(Connection con) throws SQLException {
                     int ide = tle.getInt("idenchere");
                     int ido = tle.getInt("idobjet");
                     int bgenchere = 0;
-                    try ( ResultSet nom_o = st.executeQuery("select * from objets where objets.idobjet = "+ ido)) {
-                    nom_o.next();
                     String designationobjet = "missing";
                     String descriptionobjet ="missing";
                     String mess = "missing";
-                     designationobjet = nom_o.getString("designation");
-                     descriptionobjet = nom_o.getString("description");
+                     designationobjet = tle.getString("designation");
+                     descriptionobjet = tle.getString("description");
                      mess = ide + " : " + designationobjet + " (" + descriptionobjet + ")" + "  prix proposé : " + prixpropose + " €";
                     bgenchere = qui_a_la_meilleure_offre(con,ido);
                     if (bgenchere == idu) {
                         mess = mess + " --> possédée";  
-                    }
-                    else{mess = mess + " --> non possédée";}
+                    } else{
+                        mess = mess + " --> non possédée";}
                     System.out.println(mess);
-                }
+                
                 }
                 } 
                 }
@@ -435,9 +433,10 @@ public static void deleteSchema(Connection con) throws SQLException {
              */
             //login(con, "maildeJ", "mdpp");
             //System.out.println("creation OK");
-            //createEnchere(con,1,2,39);
-          //qui_a_la_meilleure_offre(con, 1);
-             // liste_encheres_utilisateur(con,2);
+            //createEnchere(con,2,3,39000);
+            //qui_a_la_meilleure_offre(con, 2);
+            //liste_encheres_utilisateur(con,3);
+            
             //menu(con);
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
