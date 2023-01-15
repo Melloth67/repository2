@@ -256,7 +256,7 @@ public static void deleteSchema(Connection con) throws SQLException {
             // que je veux qu'il conserve les clés générées
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into encheres (idobjet,idvendeur,idclient,prixpropose) values (?,?,?)
+                insert into encheres (idobjet,idclient,prixpropose) values (?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setInt(1, idobjet);
                 pst.setInt(2, idclient);
@@ -287,6 +287,65 @@ public static void deleteSchema(Connection con) throws SQLException {
         }
     }
     
+    public static int qui_a_la_meilleure_offre (Connection con, int idobjet)throws SQLException{
+        con.setAutoCommit(false);
+            try ( Statement st = con.createStatement()) {
+                try ( ResultSet prixb = st.executeQuery("select prixbase,idvendeur from objets where idobjet = "+ idobjet)) {
+                    prixb.next();
+                    int prixbase = prixb.getInt("prixbase");
+                    int idvendeur = prixb.getInt("idvendeur");
+                int prixleplushaut = prixbase;                
+            try ( ResultSet prix = st.executeQuery("select prixpropose,idclient from encheres where idobjet = "+ idobjet)) {
+                
+                int idbestclient = idvendeur;
+                while (prix.next()) {
+                    int leprix = prix.getInt("prixpropose");
+                    int client = prix.getInt("idclient");
+                    if(prixleplushaut < leprix){
+                        prixleplushaut = leprix;
+                        idbestclient = client;
+                    }
+                }
+                
+                System.out.println(idbestclient);
+                return idbestclient;
+                }
+            }
+        }
+    }
+    
+    public static void liste_encheres_utilisateur(Connection con, int idu)throws SQLException{
+        con.setAutoCommit(false);
+            try ( Statement st = con.createStatement()) {
+                try ( ResultSet tle = st.executeQuery("select * from encheres where idclient = "+ idu)) {
+                    System.out.println("liste des enchères :");
+                System.out.println("------------------");
+                tle.next();
+                while (tle.next()) {
+                    int prixpropose = tle.getInt("prixpropose");
+                    int ide = tle.getInt("idenchere");
+                    int ido = tle.getInt("idobjet");
+                    int bgenchere = 0;
+                    try ( ResultSet nom_o = st.executeQuery("select * from objets where objets.idobjet = "+ ido)) {
+                    nom_o.next();
+                    String designationobjet = "missing";
+                    String descriptionobjet ="missing";
+                    String mess = "missing";
+                     designationobjet = nom_o.getString("designation");
+                     descriptionobjet = nom_o.getString("description");
+                     mess = ide + " : " + designationobjet + " (" + descriptionobjet + ")" + "  prix proposé : " + prixpropose + " €";
+                    bgenchere = qui_a_la_meilleure_offre(con,ido);
+                    if (bgenchere == idu) {
+                        mess = mess + " --> possédée";  
+                    }
+                    else{mess = mess + " --> non possédée";}
+                    System.out.println(mess);
+                }
+                }
+                } 
+                }
+    }
+            
 
     /*
     public static Optional<Utilisateur> login(Connection con, String email, String pass) throws SQLException {
@@ -376,7 +435,9 @@ public static void deleteSchema(Connection con) throws SQLException {
              */
             //login(con, "maildeJ", "mdpp");
             //System.out.println("creation OK");
-            createEnchere(con,1,2,5);
+            //createEnchere(con,1,2,39);
+          //qui_a_la_meilleure_offre(con, 1);
+             // liste_encheres_utilisateur(con,2);
             //menu(con);
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
