@@ -5,7 +5,7 @@
 
 package fr.insa.friker.encheres1512;
 
-import fr.insa.friker.utils.ConsoleFdB;
+import fr.insa.friker.utils.Console;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -382,14 +382,14 @@ public static void deleteSchema(Connection con) throws SQLException {
             System.out.println("3) liste des utilisateurs");
             System.out.println("4) ajouter un utilisateur");
             System.out.println("0) quitter");
-            rep = ConsoleFdB.entreeEntier("Votre choix : ");
+            rep = Console.entreeEntier("Votre choix : ");
                try {
                 if (rep == 1) {
                     creeSchema(con);
                     System.out.println("Done");
                 } else if (rep == 2) {
                         int conf = 0;
-                    conf = ConsoleFdB.entreeEntier("Tapez 1 pour confirmer");
+                    conf = Console.entreeEntier("Tapez 1 pour confirmer");
                     if (conf == 1){
                     deleteSchema(con);
                     System.out.println("Done");}
@@ -397,11 +397,11 @@ public static void deleteSchema(Connection con) throws SQLException {
                     afficheUtilisateurs(con);
                     System.out.println("voir plus haut");
                 } else if (rep == 4) {
-                    String nom = ConsoleFdB.entreeString("Le nom : ");
-                    String pass = ConsoleFdB.entreeString("Le mot de passe : ");
-                    int role = ConsoleFdB.entreeEntier("role : 1 = admin; 0 = non admin");
-                    String mail = ConsoleFdB.entreeString("L'email : ");
-                    String codepostal = ConsoleFdB.entreeString("Le code postal : ");
+                    String nom = Console.entreeString("Le nom : ");
+                    String pass = Console.entreeString("Le mot de passe : ");
+                    int role = Console.entreeEntier("role : 1 = admin; 0 = non admin");
+                    String mail = Console.entreeString("L'email : ");
+                    String codepostal = Console.entreeString("Le code postal : ");
                     
                     createUtilisateur(con,nom,pass,role,mail,codepostal);
 
