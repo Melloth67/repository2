@@ -34,7 +34,7 @@ public class Objet {
         private String idCategorie ; 
         private float PrixBase; 
         private String DateFin;
-
+        /*
         public Objet(int idObjet, String designation, String description, String idVendeur, String idCategorie, float PrixBase, String DateFin) {
             this.idObjet = idObjet;
             this.designation = designation;
@@ -92,7 +92,7 @@ public class Objet {
         public void setPrixBase( float PrixBase ) {
             this.PrixBase = PrixBase;
         }
-    
+    */
         public String getDateFin() {
             return DateFin;
         }
@@ -100,31 +100,31 @@ public class Objet {
         public void setDateFin( String DateFin ) {
             this.DateFin = DateFin;
         }
-    
+    /*
         @Override
             public String toString() {
                 return "Objet{" + "IdObjet =" + idObjet + ", designation=" + designation + ", description =" + description + ", IdVendeur =" + idVendeur + ", IdCategorie =" + idCategorie +,", PrixBase =" + PrixBase + ", DateFin =" + DateFin +'}';
             }
 
-        
+        */
             public static void creeSchema2(Connection con) throws SQLException {
             con.setAutoCommit(false);
             try ( Statement st = con.createStatement()) {            
             st.executeUpdate(
                     """
-                    create table objet (
+                    create table objets (
                         idObjet integer not null primary key,
                         generated always as identity,
                         designation varchar(80) not null,
                         description varchar(500) not null,
-                        idvendeur varchar(50) not null,
-                        idcategorie varchar(50) not null,
-                        PrixBase float not null,
+                        idVendeur integer not null,
+                        idCategorie integer not null,
+                        PrixBase integer not null,
                     )
                     """);
             st.executeUpdate(
                     """
-                    create table categorie (
+                    create table categories (
                         idCategorie integer not null primary key,
                         generated always as identity,
                         nomCategorie varchar(30) not null,
@@ -142,7 +142,7 @@ public class Objet {
                          
             public static void afficheToutesLesCategories(Connection con) throws SQLException {
             try ( Statement st = con.createStatement()) {
-                try ( ResultSet tlc = st.executeQuery("select * from categorie")) {
+                try ( ResultSet tlc = st.executeQuery("select * from categories")) {
                 System.out.println("liste des categories :");
                 System.out.println("------------------");
                 while (tlc.next()) {
@@ -158,15 +158,15 @@ public class Objet {
             
             public static void afficheTousLesObjets(Connection con) throws SQLException {
             try ( Statement st = con.createStatement()) {
-                try ( ResultSet tlo = st.executeQuery("select * from objet")) {
+                try ( ResultSet tlo = st.executeQuery("select * from objets")) {
                 System.out.println("liste des objets :");
                 System.out.println("------------------");
                 while (tlo.next()) {
                 String designation = tlo.getString("designation");
                 String description = tlo.getString("description");
-                String idvendeur = tlo.getString("Vendeur");
-                String idcategorie = tlo.getString("Categorie");
-                Float PrixBase = tlo.getFloat("PrixBase");
+                int idvendeur = tlo.getInt("Vendeur");
+                int idcategorie = tlo.getInt("Categorie");
+                int PrixBase = tlo.getInt("PrixBase");
                 int idObjet = tlo.getInt("idObjet");
                 System.out.println(designation + " : " + idObjet + "; Description : " + description + "; Categorie : " + Categorie + "; Vendeur : " + Vendeur + "; Prix : " + PrixBase);
             }
@@ -181,7 +181,7 @@ public class Objet {
                 try {
                     st.executeUpdate(
                         """
-                        drop table objet
+                        drop table objets
                         """);
                     System.out.println("La table objet est supprimée");
                 } catch (SQLException ex) {
@@ -194,7 +194,7 @@ public class Objet {
                 try {
                     st.executeUpdate(
                         """
-                        drop table categorie
+                        drop table categories
                         """);
                     System.out.println("La table categorie est supprimée");
                 } catch (SQLException ex) {
@@ -277,7 +277,7 @@ public class Objet {
             public static boolean idObjetExistant(Connection con, int idObjet) 
                     throws SQLException {
                         try( PreparedStatement pst = con.prepareStatement(
-                        "select idObjet from objet where idObjet = ?")) {
+                        "select idObjet from objets where idObjet = ?")) {
                          pst.setInt(1, idObjet);
                         ResultSet res = pst.executeQuery();
                         return res.next();
@@ -287,7 +287,7 @@ public class Objet {
             public static boolean idCategorieExistant(Connection con, int idObjet) 
                     throws SQLException {
                         try( PreparedStatement pst = con.prepareStatement(
-                        "select idCategorie from categorie where idCategorie = ?")) {
+                        "select idCategorie from categories where idCategorie = ?")) {
                         pst.setInt(1, idObjet);
                         ResultSet res = pst.executeQuery();
                         return res.next();
@@ -297,7 +297,7 @@ public class Objet {
             public static boolean DesignationExistante(Connection con, String designation) 
                     throws SQLException {
                         try( PreparedStatement pst = con.prepareStatement(
-                        "select idObjet from objet where designation = ?")) {
+                        "select idObjet from objets where designation = ?")) {
                         pst.setString(1, designation);
                         ResultSet res = pst.executeQuery();
                         return res.next();
@@ -307,7 +307,7 @@ public class Objet {
             public static boolean nomCategorieExistante(Connection con, String nomCategorie) 
                     throws SQLException {
                         try( PreparedStatement pst = con.prepareStatement(
-                        "select idCategorie from categorie where nomCategorie = ?")) {
+                        "select idCategorie from categories where nomCategorie = ?")) {
                         pst.setString(1, nomCategorie);
                         ResultSet res = pst.executeQuery();
                         return res.next();
@@ -316,7 +316,7 @@ public class Objet {
             
             public static void afficheUnObjet(Connection con, int idObjet1) throws SQLException {
                 try ( Statement st = con.createStatement()) {
-                    try ( ResultSet tlu = st.executeQuery("select * from objet where idObjet = idObjet1")) {
+                    try ( ResultSet tlu = st.executeQuery("select * from objets where idObjet = idObjet1")) {
                     System.out.println("L'objet recherché correspond à :");
                     System.out.println("------------------");
                     while (tlu.next()) {
@@ -336,7 +336,7 @@ public class Objet {
             
             public static void afficheUneCategorie(Connection con, int idCategorie1) throws SQLException {
                 try ( Statement st = con.createStatement()) {
-                    try ( ResultSet tlu = st.executeQuery("select * from categorie where idCategorie = idCategorie1")) {
+                    try ( ResultSet tlu = st.executeQuery("select * from categories where idCategorie = idCategorie1")) {
                     System.out.println("La catégorie recherchée correspond à :");
                     System.out.println("------------------");
                     while (tlu.next()) {
@@ -353,7 +353,7 @@ public class Objet {
             public static ArrayList<Objet> afficheObjetParCategorie(Connection con, String categorie) throws SQLException {
                 ArrayList<Objet> res = new ArrayList<>();
                 try (PreparedStatement pst = con.prepareStatement(
-                        "select * from Objet join Categorie on Objet.Categorie = Categorie.nomCategorie")){
+                        "select * from Objets join Categorie on Objet.Categorie = Categorie.nomCategorie")){
                         pst.setString(1,categorie);
                             try(ResultSet rs = pst.executeQuery()){
                                 while(rs.next()){
@@ -415,7 +415,7 @@ public class Objet {
             public static boolean VerifCategorie(Connection con, String nomCategorie) throws SQLException {
                 boolean test2 = false;
                 try ( Statement st = con.createStatement()) {
-                try ( ResultSet tlc = st.executeQuery("select * from objet ")) {
+                try ( ResultSet tlc = st.executeQuery("select * from objets ")) {
                     while (tlc.next()) {
                         if(nomCategorie.equals(tlc.getString("nomCategorie"))){
                         test2 = true;
