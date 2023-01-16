@@ -6,7 +6,6 @@
 package fr.insa.friker.encheres1512;
 
 import fr.insa.friker.utils.Console;
-import fr.insa.friker.encheres1512.Utilisateur;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,12 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Elève
  */
-
 public class Encheres1512 {
-    
-    
-    
-    
     
         public static class SGBD {
 
@@ -144,24 +138,6 @@ public class Encheres1512 {
             // je reviens Ã  la gestion par dÃ©faut : une transaction pour
             // chaque ordre SQL
             con.setAutoCommit(true);
-        }
-    }
-    
-    public static List<Utilisateur> tousLesUtilisateurs(Connection con) throws SQLException {
-        List<Utilisateur> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
-                "select *"
-                + " from utilisateurs "
-                + " order by nom asc")) {
-
-            try ( ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    res.add(new Utilisateur(rs.getInt("id"),
-                            rs.getString("nom"), rs.getString("pass"),
-                            rs.getString("role")));
-                }
-                return res;
-            }
         }
     }
 
@@ -338,7 +314,6 @@ public static void deleteSchema(Connection con) throws SQLException {
         }
     }
     
-    
     public static void liste_encheres_utilisateur(Connection con, int idu)throws SQLException{
         con.setAutoCommit(false);
             try ( Statement st = con.createStatement()) {
@@ -370,7 +345,7 @@ public static void deleteSchema(Connection con) throws SQLException {
     }
             
 
-    
+    /*
     public static Optional<Utilisateur> login(Connection con, String email, String pass) throws SQLException {
         try ( PreparedStatement pst = con.prepareStatement(
                 "select utilcreeschisateurs.id as uid,nrole"
@@ -388,7 +363,7 @@ public static void deleteSchema(Connection con) throws SQLException {
             }
         }
     }
-    
+    */
     
     
 
